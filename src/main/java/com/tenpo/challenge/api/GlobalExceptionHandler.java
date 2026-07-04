@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -47,6 +48,11 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleProviderUnavailable(
       PercentageProviderUnavailableException ex) {
     return errorResponse(HttpStatus.SERVICE_UNAVAILABLE, ex.getMessage());
+  }
+
+  @ExceptionHandler(NoResourceFoundException.class)
+  public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex) {
+    return errorResponse(HttpStatus.NOT_FOUND, "Resource not found");
   }
 
   @ExceptionHandler(Exception.class)
