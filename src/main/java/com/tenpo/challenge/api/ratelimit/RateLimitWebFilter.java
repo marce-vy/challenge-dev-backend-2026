@@ -1,18 +1,15 @@
-package com.tenpo.challenge.infrastructure.ratelimit;
+package com.tenpo.challenge.api.ratelimit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tenpo.challenge.api.dto.ErrorResponse;
 import com.tenpo.challenge.application.port.in.CheckRateLimitUseCase;
-import com.tenpo.challenge.application.port.out.RateLimitKeyResolver;
 import com.tenpo.challenge.application.port.out.RateLimitPolicyResolver;
 import com.tenpo.challenge.application.ratelimit.RateLimitDecision;
 import com.tenpo.challenge.application.ratelimit.RateLimitKey;
 import com.tenpo.challenge.application.ratelimit.RateLimitPolicy;
-import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.util.Objects;
-import java.util.Optional;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -51,12 +48,7 @@ public class RateLimitWebFilter implements WebFilter {
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
     ServerHttpRequest request = exchange.getRequest();
-    String remoteAddr =
-        Optional.ofNullable(request.getRemoteAddress())
-            .map(InetSocketAddress::getHostString)
-            .orElse("unknown");
-    String forwardedFor = request.getHeaders().getFirst("X-Forwarded-For");
-    RateLimitKey ipKey = keyResolver.resolve(remoteAddr, forwardedFor);
+    RateLimitKey ipKey = keyResolver.resolve(request);
     RateLimitPolicy policy = policyResolver.resolve(request.getURI().getPath());
     RateLimitKey key = new RateLimitKey(ipKey.value() + ":" + policyKey(policy));
     RateLimitDecision decision = checkRateLimitUseCase.check(key, policy);

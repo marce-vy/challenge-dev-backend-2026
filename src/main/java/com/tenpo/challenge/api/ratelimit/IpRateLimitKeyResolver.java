@@ -1,9 +1,8 @@
-package com.tenpo.challenge.infrastructure.ratelimit;
+package com.tenpo.challenge.api.ratelimit;
 
-import com.tenpo.challenge.application.port.out.ClientIpResolver;
-import com.tenpo.challenge.application.port.out.RateLimitKeyResolver;
 import com.tenpo.challenge.application.ratelimit.RateLimitKey;
 import java.util.Objects;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 
 public class IpRateLimitKeyResolver implements RateLimitKeyResolver {
 
@@ -15,8 +14,8 @@ public class IpRateLimitKeyResolver implements RateLimitKeyResolver {
   }
 
   @Override
-  public RateLimitKey resolve(String remoteAddr, String xForwardedForHeader) {
-    String ip = clientIpResolver.resolve(remoteAddr, xForwardedForHeader);
+  public RateLimitKey resolve(ServerHttpRequest request) {
+    String ip = clientIpResolver.resolve(request);
     return new RateLimitKey(ip);
   }
 }

@@ -1,9 +1,10 @@
-package com.tenpo.challenge.infrastructure.callhistory;
+package com.tenpo.challenge.api.callhistory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.tenpo.challenge.api.ratelimit.ClientIpResolver;
 import com.tenpo.challenge.application.callhistory.RecordCallHistoryCommand;
-import com.tenpo.challenge.application.port.out.ClientIpResolver;
+import com.tenpo.challenge.application.port.out.CallHistoryRecorder;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.junit.jupiter.api.Test;
@@ -15,8 +16,7 @@ import reactor.core.publisher.Mono;
 
 class CallHistoryWebFilterTest {
 
-  private static final ClientIpResolver FIXED_IP_RESOLVER =
-      (remoteAddr, xForwardedFor) -> "10.0.0.1";
+  private static final ClientIpResolver FIXED_IP_RESOLVER = request -> "10.0.0.1";
 
   @Test
   void skipsExcludedSwaggerPath() {
@@ -199,11 +199,14 @@ class CallHistoryWebFilterTest {
 
   @Test
   void resolvesClientIpFromForwardedHeader() {
-    List<String> resolvedAddresses = new CopyOnWriteArrayList<>();
+    List<String> resolvedRequests = new CopyOnWriteArrayList<>();
     ClientIpResolver trackingResolver =
-        (remoteAddr, xForwardedFor) -> {
-          resolvedAddresses.add(xForwardedFor);
-          return xForwardedFor != null ? xForwardedFor : remoteAddr;
+        request -> {
+          resolvedRequests.add(
+              request.getHeaders().getFirst("X-Forwarded-For"));
+          return request.getHeaders().getFirst("X-Forwarded-For") != null
+              ? request.getHeaders().getFirst("X-Forwarded-For")
+              : "unknown";
         };
     List<RecordCallHistoryCommand> recorded = new CopyOnWriteArrayList<>();
     CallHistoryRecorder recorder =
@@ -227,7 +230,7 @@ class CallHistoryWebFilterTest {
 
     assertThat(recorded).hasSize(1);
     assertThat(recorded.get(0).clientIp()).isEqualTo("203.0.113.1");
-    assertThat(resolvedAddresses).contains("203.0.113.1");
+    assertThat(resolvedRequests).contains("203.0.113.1");
   }
 
   @Test

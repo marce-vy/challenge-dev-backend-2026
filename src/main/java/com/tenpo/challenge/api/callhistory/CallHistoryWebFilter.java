@@ -1,7 +1,8 @@
-package com.tenpo.challenge.infrastructure.callhistory;
+package com.tenpo.challenge.api.callhistory;
 
+import com.tenpo.challenge.api.ratelimit.ClientIpResolver;
 import com.tenpo.challenge.application.callhistory.RecordCallHistoryCommand;
-import com.tenpo.challenge.application.port.out.ClientIpResolver;
+import com.tenpo.challenge.application.port.out.CallHistoryRecorder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
@@ -113,12 +114,7 @@ public class CallHistoryWebFilter implements WebFilter {
     String responseBody = bytesToString(responseBytes);
     String errorBody = success ? null : responseBody;
 
-    String remoteAddr = "unknown";
-    if (request.getRemoteAddress() != null) {
-      remoteAddr = request.getRemoteAddress().getHostString();
-    }
-    String forwardedFor = request.getHeaders().getFirst("X-Forwarded-For");
-    String clientIp = clientIpResolver.resolve(remoteAddr, forwardedFor);
+    String clientIp = clientIpResolver.resolve(request);
 
     return new RecordCallHistoryCommand(
         occurredAt,

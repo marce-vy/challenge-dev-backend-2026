@@ -1,10 +1,9 @@
-package com.tenpo.challenge.infrastructure.ratelimit;
+package com.tenpo.challenge.api.ratelimit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tenpo.challenge.application.port.in.CheckRateLimitUseCase;
-import com.tenpo.challenge.application.port.out.RateLimitKeyResolver;
 import com.tenpo.challenge.application.port.out.RateLimitPolicyResolver;
 import com.tenpo.challenge.application.ratelimit.RateLimitDecision;
 import com.tenpo.challenge.application.ratelimit.RateLimitKey;
@@ -24,7 +23,7 @@ class RateLimitWebFilterTest {
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
   private static final RateLimitKeyResolver fixedKeyResolver =
-      (remoteAddr, xForwardedFor) -> new RateLimitKey("127.0.0.1");
+      request -> new RateLimitKey("127.0.0.1");
   private static final RateLimitPolicyResolver fixedPolicyResolver = uri -> POLICY;
 
   @Test
