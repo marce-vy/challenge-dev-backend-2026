@@ -625,26 +625,29 @@ make build      # package the application
 ```text
 src/main/java/com/tenpo/challenge/
 ├── api
-│   ├── calculation       # Calculation endpoint, request and response DTOs
-│   ├── callhistory       # HTTP endpoints and DTOs for paginated history
-│   └── ratelimit         # HTTP rate-limit filter and key resolution
+│   ├── calculation         # Calculation endpoint, request and response DTOs
+│   ├── callhistory         # Controller, CallHistoryWebFilter, DTOs, mapper
+│   ├── dto                 # Shared ErrorResponse
+│   ├── ratelimit           # RateLimitWebFilter, ClientIpResolver, RateLimitKeyResolver (web adapters)
+│   └── GlobalExceptionHandler
 ├── application
 │   ├── port
-│   │   ├── in            # Use-case contracts
-│   │   └── out           # Output ports
-│   ├── service           # Use-case implementations
-│   ├── callhistory       # Application models for history recording/querying
-│   └── ratelimit         # Application models for rate limiting
-├── config                # Composition root, Spring wiring and property binding
-├── domain                # Pure domain model and business rules (no frameworks)
+│   │   ├── in              # Use-case contracts (ports)
+│   │   └── out             # Output ports (CallHistoryRecorder, RateLimiterPort, etc.)
+│   ├── exception           # Application-level exceptions
+│   ├── service             # Use-case implementations
+│   ├── callhistory         # Application models for history recording/querying
+│   └── ratelimit           # Application models for rate limiting (no HTTP dependencies)
+├── config                  # Composition root (RateLimitHttpConfig, CallHistoryConfig, etc.)
+├── domain                  # Pure domain model and business rules (no frameworks)
 ├── external
-│   └── percentage        # Percentage provider adapter
+│   └── percentage          # Percentage provider adapter
 ├── infrastructure
-│   ├── callhistory       # Reactive history recorder and WebFilter
-│   ├── ratelimit         # Bucket4j-backed rate-limiting adapter (reactive WebFilter)
-│   └── ...               # Other technical adapters
+│   ├── callhistory         # AsyncCallHistoryRecorder
+│   ├── ratelimit           # Bucket4j adapter, policy resolvers, RateLimitConfiguration
+│   └── ...                 # HTTP transport mocks, retry, WebClient
 └── persistence
-    └── callhistory       # PostgreSQL/R2DBC persistence adapter
+    └── callhistory         # PostgreSQL/R2DBC persistence adapters
 ```
 
 Application and domain code are kept independent from Spring Web, R2DBC,
