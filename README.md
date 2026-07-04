@@ -704,6 +704,33 @@ The final implementation, design decisions, code validation, and delivery
 criteria were reviewed and verified by the author. All documented commands
 and tests are intended to be reproducible locally by the evaluator.
 
+## Bonus / Additional Work
+
+### WebFlux / Reactive Version
+
+The `main` branch contains the stable Spring MVC (Servlet) implementation
+submitted for the challenge.
+
+A fully runnable WebFlux (reactive) version is available in the
+[`feature/webflux-migration`](https://github.com/marce-vy/challenge-dev-backend-2026/tree/feature/webflux-migration)
+branch as an optional exploration of the bonus requirement.
+
+Key differences from the MVC version:
+
+- **Reactive stack**: Spring WebFlux + R2DBC + Netty instead of Spring MVC +
+  JPA/Hibernate + Tomcat.
+- **WebFilter middleware**: `RateLimitWebFilter` and `CallHistoryWebFilter`
+  replace the servlet-based `OncePerRequestFilter` implementations, but the
+  use-case layer (`CheckRateLimitUseCase`, `RecordCallHistoryUseCase`, etc.) is
+  reused without changes.
+- **Non-blocking I/O**: PostgreSQL access uses R2DBC instead of JDBC for the
+  runtime queries. Flyway still uses JDBC for migrations.
+- **Docker Hub image**: `marcev/tenpo-challenge-webflux:latest`
+  (`docker compose -f docker-compose.hub.yml up`).
+
+The WebFlux branch includes its own tests, Docker configuration, and is fully
+self-contained.
+
 ## Health Checks
 
 The API exposes a health endpoint via Spring Boot Actuator at
