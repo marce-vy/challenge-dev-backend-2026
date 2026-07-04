@@ -13,6 +13,7 @@ import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import java.util.Map;
+import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -46,6 +47,11 @@ public class OpenApiConfig {
                     errorResponse("Rate limit exceeded.").headers(rateLimitHeaders())));
   }
 
+  @Bean
+  public OpenApiCustomizer errorSchemaCustomizer() {
+    return openApi -> openApi.getComponents().addSchemas("ErrorResponse", errorSchema());
+  }
+
   private Map<String, Header> rateLimitHeaders() {
     return Map.of(
         "X-RateLimit-Limit",
@@ -54,6 +60,14 @@ public class OpenApiConfig {
         new Header().description("Remaining requests in the current window."),
         HttpHeaders.RETRY_AFTER,
         new Header().description("Seconds until the request can be retried."));
+  }
+
+  private Schema<?> errorSchema() {
+    return new Schema<>()
+        .type("object")
+        .addProperty("status", new Schema<>().type("integer").description("HTTP status code.").example(400))
+        .addProperty("error", new Schema<>().type("string").description("HTTP reason phrase.").example("Bad Request"))
+        .addProperty("message", new Schema<>().type("string").description("Human-readable error message.").example("Request body is invalid"));
   }
 
   private ApiResponse errorResponse(String description) {
