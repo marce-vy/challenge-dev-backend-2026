@@ -1,0 +1,93 @@
+package com.tenpo.challenge.api.ratelimit;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tenpo.challenge.api.dto.ErrorResponse;
+import com.tenpo.challenge.application.port.in.CheckRateLimitUseCase;
+import com.tenpo.challenge.application.port.out.RateLimitPolicyResolver;
+import com.tenpo.challenge.application.ratelimit.RateLimitDecision;
+import com.tenpo.challenge.application.ratelimit.RateLimitKey;
+import com.tenpo.challenge.application.ratelimit.RateLimitPolicy;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Objects;
+import org.springframework.core.Ordered;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+public class RateLimitFilter extends OncePerRequestFilter implements Ordered {
+
+  static final String LIMIT_HEADER = "X-RateLimit-Limit";
+  static final String REMAINING_HEADER = "X-RateLimit-Remaining";
+  static final String RETRY_AFTER_HEADER = "Retry-After";
+
+  private final CheckRateLimitUseCase checkRateLimitUseCase;
+  private final RateLimitKeyResolver keyResolver;
+  private final RateLimitPolicyResolver policyResolver;
+  private final ObjectMapper objectMapper;
+
+  public RateLimitFilter(
+      CheckRateLimitUseCase checkRateLimitUseCase,
+      RateLimitKeyResolver keyResolver,
+      RateLimitPolicyResolver policyResolver,
+      ObjectMapper objectMapper) {
+    this.checkRateLimitUseCase =
+        Objects.requireNonNull(checkRateLimitUseCase, "checkRateLimitUseCase is required");
+    this.keyResolver = Objects.requireNonNull(keyResolver, "keyResolver is required");
+    this.policyResolver = Objects.requireNonNull(policyResolver, "policyResolver is required");
+    this.objectMapper = Objects.requireNonNull(objectMapper, "objectMapper is required");
+  }
+
+  @Override
+  public int getOrder() {
+    return Ordered.HIGHEST_PRECEDENCE + 1;
+  }
+
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
+    RateLimitKey ipKey = keyResolver.resolve(request);
+    RateLimitPolicy policy = policyResolver.resolve(request.getRequestURI());
+    RateLimitKey key = new RateLimitKey(ipKey.value() + ":" + policyKey(policy));
+    RateLimitDecision decision = checkRateLimitUseCase.check(key, policy);
+
+    addRateLimitHeaders(response, policy, decision);
+    if (decision.allowed()) {
+      filterChain.doFilter(request, response);
+      return;
+    }
+
+    writeRejectedResponse(response, decision);
+  }
+
+  private void addRateLimitHeaders(
+      HttpServletResponse response, RateLimitPolicy policy, RateLimitDecision decision) {
+    response.setHeader(LIMIT_HEADER, String.valueOf(policy.capacity()));
+    response.setHeader(REMAINING_HEADER, String.valueOf(decision.remainingTokens()));
+  }
+
+  private void writeRejectedResponse(HttpServletResponse response, RateLimitDecision decision)
+      throws IOException {
+    HttpStatus status = HttpStatus.TOO_MANY_REQUESTS;
+    response.setStatus(status.value());
+    response.setHeader(
+        RETRY_AFTER_HEADER, String.valueOf(toRetryAfterSeconds(decision.retryAfter())));
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    objectMapper.writeValue(
+        response.getWriter(),
+        new ErrorResponse(status.value(), status.getReasonPhrase(), "Rate limit exceeded"));
+  }
+
+  private long toRetryAfterSeconds(Duration retryAfter) {
+    return Math.max(1, (long) Math.ceil(retryAfter.toNanos() / 1_000_000_000.0));
+  }
+
+  private String policyKey(RateLimitPolicy policy) {
+    return policy.capacity() + ":" + policy.refillTokens() + ":" + policy.refillPeriod();
+  }
+}

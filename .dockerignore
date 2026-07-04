@@ -1,0 +1,10 @@
+.git/
+target/
+build/
+.mvn/wrapper/dists/
+.idea/
+.vscode/
+*.log
+.env
+.env.*
+coverage/
