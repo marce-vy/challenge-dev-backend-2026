@@ -1,4 +1,4 @@
-package com.tenpo.challenge.infrastructure.callhistory;
+package com.tenpo.challenge.api.callhistory;
 
 import com.tenpo.challenge.application.callhistory.RecordCallHistoryCommand;
 

@@ -2,19 +2,19 @@ package com.tenpo.challenge.application.service;
 
 import com.tenpo.challenge.application.callhistory.RecordCallHistoryCommand;
 import com.tenpo.challenge.application.port.in.RecordCallHistoryUseCase;
-import com.tenpo.challenge.application.port.out.CallHistoryPersistencePort;
+import com.tenpo.challenge.application.port.out.CallHistoryCommandPort;
 import java.util.Objects;
 
 public class RecordCallHistoryService implements RecordCallHistoryUseCase {
 
-  private final CallHistoryPersistencePort persistencePort;
+  private final CallHistoryCommandPort commandPort;
 
-  public RecordCallHistoryService(CallHistoryPersistencePort persistencePort) {
-    this.persistencePort = Objects.requireNonNull(persistencePort, "persistencePort is required");
+  public RecordCallHistoryService(CallHistoryCommandPort commandPort) {
+    this.commandPort = Objects.requireNonNull(commandPort, "commandPort is required");
   }
 
   @Override
   public void execute(RecordCallHistoryCommand command) {
-    persistencePort.save(Objects.requireNonNull(command, "command is required"));
+    commandPort.save(Objects.requireNonNull(command, "command is required"));
   }
 }

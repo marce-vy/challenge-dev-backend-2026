@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.tenpo.challenge.application.PercentageProviderUnavailableException;
+import com.tenpo.challenge.application.exception.PercentageProviderUnavailableException;
 import com.tenpo.challenge.application.port.in.CalculateWithPercentageUseCase;
 import com.tenpo.challenge.domain.CalculationInput;
 import com.tenpo.challenge.domain.CalculationResult;

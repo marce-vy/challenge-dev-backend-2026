@@ -1,6 +1,6 @@
 package com.tenpo.challenge.external.percentage;
 
-import com.tenpo.challenge.application.PercentageProviderUnavailableException;
+import com.tenpo.challenge.application.exception.PercentageProviderUnavailableException;
 import com.tenpo.challenge.application.port.out.PercentageProviderPort;
 import java.math.BigDecimal;
 import java.util.Objects;

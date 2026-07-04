@@ -1,4 +1,4 @@
-package com.tenpo.challenge.application;
+package com.tenpo.challenge.application.exception;
 
 public class PercentageProviderUnavailableException extends RuntimeException {
 

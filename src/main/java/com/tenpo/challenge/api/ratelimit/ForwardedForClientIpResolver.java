@@ -1,6 +1,5 @@
-package com.tenpo.challenge.infrastructure;
+package com.tenpo.challenge.api.ratelimit;
 
-import com.tenpo.challenge.api.ratelimit.ClientIpResolver;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class ForwardedForClientIpResolver implements ClientIpResolver {

@@ -3,7 +3,7 @@ package com.tenpo.challenge.application.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.tenpo.challenge.application.callhistory.RecordCallHistoryCommand;
-import com.tenpo.challenge.application.port.out.CallHistoryPersistencePort;
+import com.tenpo.challenge.application.port.out.CallHistoryCommandPort;
 import java.time.Instant;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +31,7 @@ class RecordCallHistoryServiceTest {
     assertThat(port.command).isSameAs(command);
   }
 
-  private static final class RecordingPort implements CallHistoryPersistencePort {
+  private static final class RecordingPort implements CallHistoryCommandPort {
 
     private RecordCallHistoryCommand command;
 

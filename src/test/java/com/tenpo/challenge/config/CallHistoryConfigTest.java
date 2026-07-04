@@ -3,7 +3,7 @@ package com.tenpo.challenge.config;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-import com.tenpo.challenge.application.port.out.CallHistoryPersistencePort;
+import com.tenpo.challenge.application.port.out.CallHistoryCommandPort;
 import com.tenpo.challenge.application.port.out.CallHistoryQueryPort;
 import com.tenpo.challenge.persistence.callhistory.CallHistoryCommandAdapter;
 import com.tenpo.challenge.persistence.callhistory.CallHistoryQueryAdapter;
@@ -21,9 +21,9 @@ class CallHistoryConfigTest {
   }
 
   @Test
-  void persistencePortWiresCommandAdapter() {
-    CallHistoryPersistencePort port =
-        new CallHistoryConfig().callHistoryPersistencePort(mock(CallHistoryRepository.class));
+  void commandPortWiresCommandAdapter() {
+    CallHistoryCommandPort port =
+        new CallHistoryConfig().callHistoryCommandPort(mock(CallHistoryRepository.class));
 
     assertThat(port).isInstanceOf(CallHistoryCommandAdapter.class);
   }

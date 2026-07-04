@@ -1,10 +1,10 @@
 package com.tenpo.challenge.persistence.callhistory;
 
 import com.tenpo.challenge.application.callhistory.RecordCallHistoryCommand;
-import com.tenpo.challenge.application.port.out.CallHistoryPersistencePort;
+import com.tenpo.challenge.application.port.out.CallHistoryCommandPort;
 import java.util.Objects;
 
-public class CallHistoryCommandAdapter implements CallHistoryPersistencePort {
+public class CallHistoryCommandAdapter implements CallHistoryCommandPort {
 
   private final CallHistoryRepository repository;
 

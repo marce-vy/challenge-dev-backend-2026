@@ -1,4 +1,4 @@
-package com.tenpo.challenge.infrastructure.callhistory;
+package com.tenpo.challenge.api.callhistory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

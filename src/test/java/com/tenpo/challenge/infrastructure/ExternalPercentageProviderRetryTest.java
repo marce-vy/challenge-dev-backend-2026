@@ -3,7 +3,7 @@ package com.tenpo.challenge.infrastructure;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.tenpo.challenge.application.PercentageProviderUnavailableException;
+import com.tenpo.challenge.application.exception.PercentageProviderUnavailableException;
 import com.tenpo.challenge.external.percentage.ExternalPercentageProvider;
 import com.tenpo.challenge.external.percentage.PercentageFetcher;
 import com.tenpo.challenge.infrastructure.RetryingPercentageFetcher;

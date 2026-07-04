@@ -12,7 +12,7 @@ import com.tenpo.challenge.application.port.out.RateLimitPolicyResolver;
 import com.tenpo.challenge.application.port.out.RateLimiterPort;
 import com.tenpo.challenge.application.ratelimit.RateLimitKey;
 import com.tenpo.challenge.application.service.CheckRateLimitService;
-import com.tenpo.challenge.infrastructure.ForwardedForClientIpResolver;
+import com.tenpo.challenge.api.ratelimit.ForwardedForClientIpResolver;
 import io.github.bucket4j.Bucket;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

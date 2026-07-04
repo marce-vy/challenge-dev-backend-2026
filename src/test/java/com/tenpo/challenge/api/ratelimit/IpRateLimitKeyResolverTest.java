@@ -2,7 +2,7 @@ package com.tenpo.challenge.api.ratelimit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.tenpo.challenge.infrastructure.ForwardedForClientIpResolver;
+import com.tenpo.challenge.api.ratelimit.ForwardedForClientIpResolver;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 

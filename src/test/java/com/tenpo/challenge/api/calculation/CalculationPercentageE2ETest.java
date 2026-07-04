@@ -28,7 +28,7 @@ class CalculationPercentageE2ETest {
 
   @Container
   private static final PostgreSQLContainer<?> POSTGRES =
-      new PostgreSQLContainer<>("postgres:16-alpine").withInitScript("schema.sql");
+      new PostgreSQLContainer<>("postgres:16-alpine");
 
   @DynamicPropertySource
   static void databaseProperties(DynamicPropertyRegistry registry) {
