@@ -14,7 +14,8 @@ public class PathBasedRateLimitPolicyResolver implements RateLimitPolicyResolver
 
   public PathBasedRateLimitPolicyResolver(
       List<PathPolicy> pathPolicies, RateLimitPolicy defaultPolicy) {
-    this.pathPolicies = List.copyOf(Objects.requireNonNull(pathPolicies, "pathPolicies is required"));
+    this.pathPolicies =
+        List.copyOf(Objects.requireNonNull(pathPolicies, "pathPolicies is required"));
     this.defaultPolicy = Objects.requireNonNull(defaultPolicy, "defaultPolicy is required");
   }
 

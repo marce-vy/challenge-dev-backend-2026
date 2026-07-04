@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.tenpo.challenge.application.exception.PercentageProviderUnavailableException;
 import com.tenpo.challenge.external.percentage.ExternalPercentageProvider;
 import com.tenpo.challenge.external.percentage.PercentageFetcher;
-import com.tenpo.challenge.infrastructure.RetryingPercentageFetcher;
 import io.github.resilience4j.retry.Retry;
 import java.io.IOException;
 import java.math.BigDecimal;

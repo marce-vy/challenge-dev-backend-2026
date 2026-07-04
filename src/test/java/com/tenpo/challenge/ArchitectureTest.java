@@ -31,10 +31,7 @@ class ArchitectureTest {
         .should()
         .dependOnClassesThat()
         .resideInAnyPackage(
-            "org.springframework..",
-            "jakarta.persistence..",
-            "org.hibernate..",
-            "java.sql..")
+            "org.springframework..", "jakarta.persistence..", "org.hibernate..", "java.sql..")
         .check(importedClasses);
   }
 
@@ -101,10 +98,6 @@ class ArchitectureTest {
 
   @Test
   void packageDependenciesMustNotFormCycles() {
-    slices()
-        .matching("com.tenpo.challenge.(*)..")
-        .should()
-        .beFreeOfCycles()
-        .check(importedClasses);
+    slices().matching("com.tenpo.challenge.(*)..").should().beFreeOfCycles().check(importedClasses);
   }
 }

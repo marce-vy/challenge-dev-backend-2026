@@ -9,10 +9,8 @@ import org.junit.jupiter.api.Test;
 
 class PathBasedRateLimitPolicyResolverTest {
 
-  private static final RateLimitPolicy DEFAULT =
-      new RateLimitPolicy(3, 3, Duration.ofMinutes(1));
-  private static final RateLimitPolicy SWAGGER =
-      new RateLimitPolicy(60, 60, Duration.ofMinutes(1));
+  private static final RateLimitPolicy DEFAULT = new RateLimitPolicy(3, 3, Duration.ofMinutes(1));
+  private static final RateLimitPolicy SWAGGER = new RateLimitPolicy(60, 60, Duration.ofMinutes(1));
 
   @Test
   void resolvesDefaultPolicyForUnmatchedPath() {

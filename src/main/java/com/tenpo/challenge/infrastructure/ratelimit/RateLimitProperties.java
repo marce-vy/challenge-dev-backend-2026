@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.time.Duration;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -74,8 +73,7 @@ public class RateLimitProperties {
 
   private PathBasedRateLimitPolicyResolver.PathPolicy toPathPolicy(PathPolicyProperties p) {
     return new PathBasedRateLimitPolicyResolver.PathPolicy(
-        p.pattern(),
-        new RateLimitPolicy(p.capacity(), p.refillTokens(), p.refillPeriod()));
+        p.pattern(), new RateLimitPolicy(p.capacity(), p.refillTokens(), p.refillPeriod()));
   }
 
   public static class PathPolicyProperties {

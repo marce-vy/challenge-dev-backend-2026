@@ -18,12 +18,7 @@ public class RetryingPercentageFetcher implements PercentageFetcher {
     this.supplier =
         Retry.decorateSupplier(
             retry,
-            () ->
-                restClient
-                    .get()
-                    .uri(percentagePath)
-                    .retrieve()
-                    .body(PercentageResponse.class));
+            () -> restClient.get().uri(percentagePath).retrieve().body(PercentageResponse.class));
   }
 
   @Override

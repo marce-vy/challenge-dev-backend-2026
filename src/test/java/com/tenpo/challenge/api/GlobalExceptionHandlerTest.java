@@ -5,8 +5,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.tenpo.challenge.api.dto.ErrorResponse;
-import com.tenpo.challenge.application.exception.PercentageProviderUnavailableException;
 import com.tenpo.challenge.application.callhistory.InvalidPaginationException;
+import com.tenpo.challenge.application.exception.PercentageProviderUnavailableException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
@@ -70,7 +70,8 @@ class GlobalExceptionHandlerTest {
 
   @Test
   void handleInvalidPaginationReturns400WithExceptionMessage() {
-    InvalidPaginationException ex = new InvalidPaginationException("size must be between 1 and 100");
+    InvalidPaginationException ex =
+        new InvalidPaginationException("size must be between 1 and 100");
 
     ResponseEntity<ErrorResponse> response = handler.handleInvalidPagination(ex);
 

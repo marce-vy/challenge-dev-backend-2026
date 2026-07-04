@@ -2,6 +2,7 @@ package com.tenpo.challenge.infrastructure.callhistory;
 
 import com.tenpo.challenge.application.callhistory.RecordCallHistoryCommand;
 import com.tenpo.challenge.application.port.in.RecordCallHistoryUseCase;
+import com.tenpo.challenge.application.port.out.CallHistoryRecorder;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

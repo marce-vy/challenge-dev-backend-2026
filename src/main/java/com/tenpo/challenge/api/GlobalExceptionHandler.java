@@ -1,8 +1,8 @@
 package com.tenpo.challenge.api;
 
 import com.tenpo.challenge.api.dto.ErrorResponse;
-import com.tenpo.challenge.application.exception.PercentageProviderUnavailableException;
 import com.tenpo.challenge.application.callhistory.InvalidPaginationException;
+import com.tenpo.challenge.application.exception.PercentageProviderUnavailableException;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

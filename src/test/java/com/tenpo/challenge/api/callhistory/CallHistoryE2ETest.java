@@ -15,10 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -72,7 +72,8 @@ class CallHistoryE2ETest {
         42L,
         "127.0.0.1");
 
-    ResponseEntity<String> response = restTemplate.getForEntity("/api/v1/call-history", String.class);
+    ResponseEntity<String> response =
+        restTemplate.getForEntity("/api/v1/call-history", String.class);
     String body = response.getBody();
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

@@ -1,4 +1,4 @@
-package com.tenpo.challenge.infrastructure.ratelimit;
+package com.tenpo.challenge.api.ratelimit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -96,6 +96,6 @@ class RateLimitFilterTest {
   }
 
   private RateLimitFilter filterWithUseCase(CheckRateLimitUseCase useCase) {
-    return new RateLimitFilter(useCase, (addr, forwarded) -> KEY, uri -> POLICY, objectMapper);
+    return new RateLimitFilter(useCase, request -> KEY, uri -> POLICY, objectMapper);
   }
 }

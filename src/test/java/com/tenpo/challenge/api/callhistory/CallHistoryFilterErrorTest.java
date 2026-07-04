@@ -1,10 +1,11 @@
-package com.tenpo.challenge.infrastructure.callhistory;
+package com.tenpo.challenge.api.callhistory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.tenpo.challenge.application.callhistory.RecordCallHistoryCommand;
+import com.tenpo.challenge.application.port.out.CallHistoryRecorder;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -16,7 +17,7 @@ class CallHistoryFilterErrorTest {
   @Test
   void capturesServerErrorWithErrorBody() throws Exception {
     CallHistoryRecorder recorder = mock(CallHistoryRecorder.class);
-    CallHistoryFilter filter = new CallHistoryFilter(recorder, (addr, forwarded) -> addr);
+    CallHistoryFilter filter = new CallHistoryFilter(recorder, request -> request.getRemoteAddr());
     MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/v1/calculations");
     request.setCharacterEncoding(StandardCharsets.UTF_8.name());
     MockHttpServletResponse response = new MockHttpServletResponse();
@@ -49,7 +50,7 @@ class CallHistoryFilterErrorTest {
   @Test
   void classifiesRedirectAsSuccess() throws Exception {
     CallHistoryRecorder recorder = mock(CallHistoryRecorder.class);
-    CallHistoryFilter filter = new CallHistoryFilter(recorder, (addr, forwarded) -> addr);
+    CallHistoryFilter filter = new CallHistoryFilter(recorder, request -> request.getRemoteAddr());
     MockHttpServletRequest request = new MockHttpServletRequest("GET", "/redirect");
     request.setCharacterEncoding(StandardCharsets.UTF_8.name());
     MockHttpServletResponse response = new MockHttpServletResponse();
@@ -79,7 +80,7 @@ class CallHistoryFilterErrorTest {
   @Test
   void capturesHttpStatusWithNoResponseBodyAsSuccess() throws Exception {
     CallHistoryRecorder recorder = mock(CallHistoryRecorder.class);
-    CallHistoryFilter filter = new CallHistoryFilter(recorder, (addr, forwarded) -> addr);
+    CallHistoryFilter filter = new CallHistoryFilter(recorder, request -> request.getRemoteAddr());
     MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/v1/calculations");
     request.setCharacterEncoding(StandardCharsets.UTF_8.name());
     MockHttpServletResponse response = new MockHttpServletResponse();

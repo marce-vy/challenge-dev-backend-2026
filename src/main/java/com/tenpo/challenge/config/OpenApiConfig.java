@@ -65,9 +65,17 @@ public class OpenApiConfig {
   private Schema<?> errorSchema() {
     return new Schema<>()
         .type("object")
-        .addProperty("status", new Schema<>().type("integer").description("HTTP status code.").example(400))
-        .addProperty("error", new Schema<>().type("string").description("HTTP reason phrase.").example("Bad Request"))
-        .addProperty("message", new Schema<>().type("string").description("Human-readable error message.").example("Request body is invalid"));
+        .addProperty(
+            "status", new Schema<>().type("integer").description("HTTP status code.").example(400))
+        .addProperty(
+            "error",
+            new Schema<>().type("string").description("HTTP reason phrase.").example("Bad Request"))
+        .addProperty(
+            "message",
+            new Schema<>()
+                .type("string")
+                .description("Human-readable error message.")
+                .example("Request body is invalid"));
   }
 
   private ApiResponse errorResponse(String description) {

@@ -29,7 +29,9 @@ public class PercentageRestClientConfig {
 
   @Bean
   @ConditionalOnProperty(
-      prefix = "percentage-provider.transport", name = "mode", havingValue = "failure")
+      prefix = "percentage-provider.transport",
+      name = "mode",
+      havingValue = "failure")
   public FailingPercentageHttpTransport failingPercentageHttpTransport() {
     return new FailingPercentageHttpTransport();
   }
@@ -37,7 +39,6 @@ public class PercentageRestClientConfig {
   @Bean
   public org.springframework.web.client.RestClient springPercentageRestClient(
       ClientHttpRequestFactory percentageHttpTransport) {
-    return RestClientFactory.springRestClient(
-        properties.http().baseUrl(), percentageHttpTransport);
+    return RestClientFactory.springRestClient(properties.http().baseUrl(), percentageHttpTransport);
   }
 }

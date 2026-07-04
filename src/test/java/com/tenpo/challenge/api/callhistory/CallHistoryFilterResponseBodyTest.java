@@ -1,9 +1,10 @@
-package com.tenpo.challenge.infrastructure.callhistory;
+package com.tenpo.challenge.api.callhistory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
+import com.tenpo.challenge.application.port.out.CallHistoryRecorder;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -14,7 +15,7 @@ class CallHistoryFilterResponseBodyTest {
   @Test
   void preservesTheOriginalResponseBodyAfterRecording() throws Exception {
     CallHistoryRecorder recorder = Mockito.mock(CallHistoryRecorder.class);
-    CallHistoryFilter filter = new CallHistoryFilter(recorder, (addr, forwarded) -> addr);
+    CallHistoryFilter filter = new CallHistoryFilter(recorder, request -> request.getRemoteAddr());
     MockHttpServletRequest request =
         CallHistoryFilterTestSupport.postCalculationRequest("{\"num1\":100,\"num2\":50}");
     MockHttpServletResponse response =
@@ -30,7 +31,7 @@ class CallHistoryFilterResponseBodyTest {
     doThrow(new RuntimeException("persistence unavailable"))
         .when(recorder)
         .record(org.mockito.ArgumentMatchers.any());
-    CallHistoryFilter filter = new CallHistoryFilter(recorder, (addr, forwarded) -> addr);
+    CallHistoryFilter filter = new CallHistoryFilter(recorder, request -> request.getRemoteAddr());
     MockHttpServletRequest request =
         CallHistoryFilterTestSupport.postCalculationRequest("{\"num1\":100,\"num2\":50}");
     MockHttpServletResponse response =
@@ -47,7 +48,7 @@ class CallHistoryFilterResponseBodyTest {
     doThrow(new RuntimeException("persistence unavailable"))
         .when(recorder)
         .record(org.mockito.ArgumentMatchers.any());
-    CallHistoryFilter filter = new CallHistoryFilter(recorder, (addr, forwarded) -> addr);
+    CallHistoryFilter filter = new CallHistoryFilter(recorder, request -> request.getRemoteAddr());
     MockHttpServletRequest request =
         CallHistoryFilterTestSupport.postCalculationRequest("{\"num1\":100}");
     MockHttpServletResponse response =

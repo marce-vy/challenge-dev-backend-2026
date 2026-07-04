@@ -1,9 +1,8 @@
-package com.tenpo.challenge.infrastructure.ratelimit;
+package com.tenpo.challenge.api.ratelimit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tenpo.challenge.api.dto.ErrorResponse;
 import com.tenpo.challenge.application.port.in.CheckRateLimitUseCase;
-import com.tenpo.challenge.application.port.out.RateLimitKeyResolver;
 import com.tenpo.challenge.application.port.out.RateLimitPolicyResolver;
 import com.tenpo.challenge.application.ratelimit.RateLimitDecision;
 import com.tenpo.challenge.application.ratelimit.RateLimitKey;
@@ -52,9 +51,7 @@ public class RateLimitFilter extends OncePerRequestFilter implements Ordered {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    String remoteAddr = request.getRemoteAddr();
-    String forwardedFor = request.getHeader("X-Forwarded-For");
-    RateLimitKey ipKey = keyResolver.resolve(remoteAddr, forwardedFor);
+    RateLimitKey ipKey = keyResolver.resolve(request);
     RateLimitPolicy policy = policyResolver.resolve(request.getRequestURI());
     RateLimitKey key = new RateLimitKey(ipKey.value() + ":" + policyKey(policy));
     RateLimitDecision decision = checkRateLimitUseCase.check(key, policy);
