@@ -518,28 +518,28 @@ make build      # package the application
 src/main/java/com/tenpo/challenge/
 ├── api
 │   ├── calculation         # Calculation endpoint, request and response DTOs
-│   ├── callhistory         # HTTP endpoints and DTOs for paginated history
-│   ├── dto                 # Shared error response
-│   ├── ratelimit           # (empty) deprecated, moved to infrastructure
-│   └── GlobalExceptionHandler.java
+│   ├── callhistory         # Controller, CallHistoryFilter (OncePerRequestFilter), DTOs, mapper
+│   ├── dto                 # Shared ErrorResponse
+│   ├── ratelimit           # RateLimitFilter, ClientIpResolver, RateLimitKeyResolver (web adapters)
+│   └── GlobalExceptionHandler
 ├── application
 │   ├── port
 │   │   ├── in              # Use-case contracts (ports)
-│   │   └── out             # Output ports (ClientIpResolver, RateLimitKeyResolver, etc.)
+│   │   └── out             # Output ports (CallHistoryRecorder, RateLimiterPort, etc.)
 │   ├── exception           # Application-level exceptions
 │   ├── service             # Use-case implementations
 │   ├── callhistory         # Application models for history recording/querying
-│   └── ratelimit           # Application models for rate limiting
-├── config                  # Composition root, Spring wiring and property binding
+│   └── ratelimit           # Application models for rate limiting (no HTTP dependencies)
+├── config                  # Composition root (RateLimitHttpConfig, CallHistoryConfig, etc.)
 ├── domain                  # Pure domain model and business rules (no frameworks)
 ├── external
 │   └── percentage          # Percentage provider adapter
 ├── infrastructure
-│   ├── callhistory         # Async history recorder, HTTP filter (OncePerRequestFilter)
-│   ├── ratelimit           # Bucket4j-backed rate-limiting adapter, HTTP filter, IP resolvers
-│   └── ...                 # Other technical adapters
+│   ├── callhistory         # AsyncCallHistoryRecorder
+│   ├── ratelimit           # Bucket4j adapter, policy resolvers, RateLimitConfiguration
+│   └── ...                 # HTTP transport mocks, retry, RestClient
 └── persistence
-    └── callhistory         # PostgreSQL/JPA persistence adapter
+    └── callhistory         # PostgreSQL/JPA persistence adapters
 ```
 
 Application and domain code are kept independent from Spring Web, JPA,
