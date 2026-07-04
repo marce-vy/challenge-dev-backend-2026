@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+  <Match>
+    <Class name="~com\.tenpo\.challenge\.infrastructure\.callhistory\.CallHistoryWebFilter.*" />
+  </Match>
+  <Match>
+    <Class name="com.tenpo.challenge.infrastructure.RestClientWrapper" />
+    <Bug pattern="EI_EXPOSE_REP2" />
+  </Match>
+  <Match>
+    <Class name="com.tenpo.challenge.persistence.callhistory.CallHistoryQueryAdapter" />
+    <Bug pattern="EI_EXPOSE_REP2" />
+  </Match>
+</FindBugsFilter>

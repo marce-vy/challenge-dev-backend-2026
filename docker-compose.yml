@@ -1,0 +1,65 @@
+name: tenpo-challenge
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: tenpo-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tenpo_challenge
+      POSTGRES_USER: tenpo
+      POSTGRES_PASSWORD: tenpo
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tenpo -d tenpo_challenge"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - tenpo-postgres-data:/var/lib/postgresql/data
+    networks:
+      - tenpo-network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tenpo-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/tenpo_challenge
+      SPRING_DATASOURCE_USERNAME: tenpo
+      SPRING_DATASOURCE_PASSWORD: tenpo
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/tenpo_challenge
+      SPRING_R2DBC_USERNAME: tenpo
+      SPRING_R2DBC_PASSWORD: tenpo
+      RATE_LIMIT_CAPACITY: 3
+      RATE_LIMIT_REFILL_TOKENS: 3
+      RATE_LIMIT_REFILL_PERIOD: 1m
+      PERCENTAGE_PROVIDER_BASE_URL: https://percentage-provider.local
+      PERCENTAGE_PROVIDER_PATH: /percentage
+      PERCENTAGE_PROVIDER_RETRY_MAX_ATTEMPTS: 3
+      PERCENTAGE_PROVIDER_TRANSPORT_MODE: ${PERCENTAGE_PROVIDER_TRANSPORT_MODE:-mock}
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    networks:
+      - tenpo-network
+
+volumes:
+  tenpo-postgres-data:
+
+networks:
+  tenpo-network:
+    driver: bridge
