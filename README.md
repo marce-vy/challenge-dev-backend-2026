@@ -495,8 +495,9 @@ Architecture boundaries are enforced at two levels:
 
 - **ArchUnit tests** (`ArchitectureTest`): validate at bytecode level that
   `domain` has no Spring/JPA dependencies, `application` has no web/persistence
-  imports, `api` never references `persistence`, ports are interfaces, services
-  reside in `application.service`, and packages form no cycles.
+  imports, `api` never references `persistence`, `infrastructure` never references
+  `api`, ports are interfaces, services reside in `application.service`, and
+  packages form no cycles.
 - **Shell script** (`check-architecture-boundaries.sh`): fast `grep`-based
   scan of import statements, integrated into `make verify` for CI.
 
@@ -516,26 +517,29 @@ make build      # package the application
 ```text
 src/main/java/com/tenpo/challenge/
 ├── api
-│   ├── calculation       # Calculation endpoint, request and response DTOs
-│   ├── callhistory       # HTTP endpoints and DTOs for paginated history
-│   └── ratelimit         # HTTP rate-limit filter and key resolution
+│   ├── calculation         # Calculation endpoint, request and response DTOs
+│   ├── callhistory         # HTTP endpoints and DTOs for paginated history
+│   ├── dto                 # Shared error response
+│   ├── ratelimit           # (empty) deprecated, moved to infrastructure
+│   └── GlobalExceptionHandler.java
 ├── application
 │   ├── port
-│   │   ├── in            # Use-case contracts
-│   │   └── out           # Output ports
-│   ├── service           # Use-case implementations
-│   ├── callhistory       # Application models for history recording/querying
-│   └── ratelimit         # Application models for rate limiting
-├── config                # Composition root, Spring wiring and property binding
-├── domain                # Pure domain model and business rules (no frameworks)
+│   │   ├── in              # Use-case contracts (ports)
+│   │   └── out             # Output ports (ClientIpResolver, RateLimitKeyResolver, etc.)
+│   ├── exception           # Application-level exceptions
+│   ├── service             # Use-case implementations
+│   ├── callhistory         # Application models for history recording/querying
+│   └── ratelimit           # Application models for rate limiting
+├── config                  # Composition root, Spring wiring and property binding
+├── domain                  # Pure domain model and business rules (no frameworks)
 ├── external
-│   └── percentage        # Percentage provider adapter
+│   └── percentage          # Percentage provider adapter
 ├── infrastructure
-│   ├── callhistory       # Async history recorder and HTTP filter
-│   ├── ratelimit         # Bucket4j-backed rate-limiting adapter
-│   └── ...               # Other technical adapters
+│   ├── callhistory         # Async history recorder, HTTP filter (OncePerRequestFilter)
+│   ├── ratelimit           # Bucket4j-backed rate-limiting adapter, HTTP filter, IP resolvers
+│   └── ...                 # Other technical adapters
 └── persistence
-    └── callhistory       # PostgreSQL/JPA persistence adapter
+    └── callhistory         # PostgreSQL/JPA persistence adapter
 ```
 
 Application and domain code are kept independent from Spring Web, JPA,

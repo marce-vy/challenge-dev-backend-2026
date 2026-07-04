@@ -1,11 +1,11 @@
-package com.tenpo.challenge.api.callhistory;
+package com.tenpo.challenge.infrastructure.callhistory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import com.tenpo.challenge.api.ratelimit.ClientIpResolver;
 import com.tenpo.challenge.application.callhistory.RecordCallHistoryCommand;
+import com.tenpo.challenge.application.port.out.ClientIpResolver;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -18,7 +18,7 @@ class CallHistoryFilterTest {
   void capturesSuccessfulFunctionalRequestAndResponse() throws Exception {
     AtomicReference<RecordCallHistoryCommand> captured = new AtomicReference<>();
     CallHistoryRecorder recorder = mock(CallHistoryRecorder.class);
-    ClientIpResolver ipResolver = request -> request.getRemoteAddr();
+    ClientIpResolver ipResolver = (addr, forwarded) -> addr;
     CallHistoryFilter filter = new CallHistoryFilter(recorder, ipResolver);
     MockHttpServletRequest request =
         CallHistoryFilterTestSupport.postCalculationRequest("{\"num1\":100,\"num2\":50}");
@@ -50,7 +50,7 @@ class CallHistoryFilterTest {
   void recordsFailureWithoutBreakingTheResponseBody() throws Exception {
     AtomicReference<RecordCallHistoryCommand> captured = new AtomicReference<>();
     CallHistoryRecorder recorder = mock(CallHistoryRecorder.class);
-    ClientIpResolver ipResolver = request -> request.getRemoteAddr();
+    ClientIpResolver ipResolver = (addr, forwarded) -> addr;
     CallHistoryFilter filter = new CallHistoryFilter(recorder, ipResolver);
     MockHttpServletRequest request =
         CallHistoryFilterTestSupport.postCalculationRequest("{\"num1\":100}");

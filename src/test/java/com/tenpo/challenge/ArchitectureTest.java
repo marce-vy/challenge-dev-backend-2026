@@ -89,6 +89,17 @@ class ArchitectureTest {
   }
 
   @Test
+  void infrastructureMustNotDependOnApi() {
+    noClasses()
+        .that()
+        .resideInAPackage("..infrastructure..")
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage("..api.calculation..", "..api.callhistory..", "..api.ratelimit..")
+        .check(importedClasses);
+  }
+
+  @Test
   void packageDependenciesMustNotFormCycles() {
     slices()
         .matching("com.tenpo.challenge.(*)..")

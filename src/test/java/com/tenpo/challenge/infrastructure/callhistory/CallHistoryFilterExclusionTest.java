@@ -1,4 +1,4 @@
-package com.tenpo.challenge.api.callhistory;
+package com.tenpo.challenge.infrastructure.callhistory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -32,7 +32,7 @@ class CallHistoryFilterExclusionTest {
   @MethodSource("excludedPaths")
   void skipsRecordingForExcludedPaths(String path) throws Exception {
     CallHistoryRecorder recorder = mock(CallHistoryRecorder.class);
-    CallHistoryFilter filter = new CallHistoryFilter(recorder, request -> request.getRemoteAddr());
+    CallHistoryFilter filter = new CallHistoryFilter(recorder, (addr, forwarded) -> addr);
     MockHttpServletRequest request = new MockHttpServletRequest("GET", path);
     request.setCharacterEncoding(StandardCharsets.UTF_8.name());
     MockHttpServletResponse response = new MockHttpServletResponse();

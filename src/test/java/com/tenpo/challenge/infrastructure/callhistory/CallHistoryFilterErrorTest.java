@@ -1,4 +1,4 @@
-package com.tenpo.challenge.api.callhistory;
+package com.tenpo.challenge.infrastructure.callhistory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -16,7 +16,7 @@ class CallHistoryFilterErrorTest {
   @Test
   void capturesServerErrorWithErrorBody() throws Exception {
     CallHistoryRecorder recorder = mock(CallHistoryRecorder.class);
-    CallHistoryFilter filter = new CallHistoryFilter(recorder, request -> request.getRemoteAddr());
+    CallHistoryFilter filter = new CallHistoryFilter(recorder, (addr, forwarded) -> addr);
     MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/v1/calculations");
     request.setCharacterEncoding(StandardCharsets.UTF_8.name());
     MockHttpServletResponse response = new MockHttpServletResponse();
@@ -49,7 +49,7 @@ class CallHistoryFilterErrorTest {
   @Test
   void classifiesRedirectAsSuccess() throws Exception {
     CallHistoryRecorder recorder = mock(CallHistoryRecorder.class);
-    CallHistoryFilter filter = new CallHistoryFilter(recorder, request -> request.getRemoteAddr());
+    CallHistoryFilter filter = new CallHistoryFilter(recorder, (addr, forwarded) -> addr);
     MockHttpServletRequest request = new MockHttpServletRequest("GET", "/redirect");
     request.setCharacterEncoding(StandardCharsets.UTF_8.name());
     MockHttpServletResponse response = new MockHttpServletResponse();
@@ -79,7 +79,7 @@ class CallHistoryFilterErrorTest {
   @Test
   void capturesHttpStatusWithNoResponseBodyAsSuccess() throws Exception {
     CallHistoryRecorder recorder = mock(CallHistoryRecorder.class);
-    CallHistoryFilter filter = new CallHistoryFilter(recorder, request -> request.getRemoteAddr());
+    CallHistoryFilter filter = new CallHistoryFilter(recorder, (addr, forwarded) -> addr);
     MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/v1/calculations");
     request.setCharacterEncoding(StandardCharsets.UTF_8.name());
     MockHttpServletResponse response = new MockHttpServletResponse();

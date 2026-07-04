@@ -1,7 +1,7 @@
-package com.tenpo.challenge.api.callhistory;
+package com.tenpo.challenge.infrastructure.callhistory;
 
-import com.tenpo.challenge.api.ratelimit.ClientIpResolver;
 import com.tenpo.challenge.application.callhistory.RecordCallHistoryCommand;
+import com.tenpo.challenge.application.port.out.ClientIpResolver;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -101,7 +101,7 @@ public class CallHistoryFilter extends OncePerRequestFilter implements Ordered {
         status,
         success,
         TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startedAtNanos),
-        clientIpResolver.resolve(request));
+        clientIpResolver.resolve(request.getRemoteAddr(), request.getHeader("X-Forwarded-For")));
   }
 
   private String bodyToString(byte[] body, String encoding) {

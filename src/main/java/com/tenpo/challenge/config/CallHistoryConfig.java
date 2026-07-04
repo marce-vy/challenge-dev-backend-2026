@@ -1,15 +1,15 @@
 package com.tenpo.challenge.config;
 
-import com.tenpo.challenge.api.ratelimit.ClientIpResolver;
 import com.tenpo.challenge.application.port.in.GetCallHistoryUseCase;
 import com.tenpo.challenge.application.port.in.RecordCallHistoryUseCase;
 import com.tenpo.challenge.application.port.out.CallHistoryCommandPort;
 import com.tenpo.challenge.application.port.out.CallHistoryQueryPort;
+import com.tenpo.challenge.application.port.out.ClientIpResolver;
 import com.tenpo.challenge.application.service.GetCallHistoryService;
 import com.tenpo.challenge.application.service.RecordCallHistoryService;
 import com.tenpo.challenge.infrastructure.callhistory.AsyncCallHistoryRecorder;
-import com.tenpo.challenge.api.callhistory.CallHistoryFilter;
-import com.tenpo.challenge.api.callhistory.CallHistoryRecorder;
+import com.tenpo.challenge.infrastructure.callhistory.CallHistoryFilter;
+import com.tenpo.challenge.infrastructure.callhistory.CallHistoryRecorder;
 import com.tenpo.challenge.persistence.callhistory.CallHistoryRepository;
 import com.tenpo.challenge.persistence.callhistory.CallHistoryCommandAdapter;
 import com.tenpo.challenge.persistence.callhistory.CallHistoryQueryAdapter;

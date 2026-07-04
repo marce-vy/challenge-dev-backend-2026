@@ -1,4 +1,4 @@
-package com.tenpo.challenge.api.callhistory;
+package com.tenpo.challenge.infrastructure.callhistory;
 
 import java.nio.charset.StandardCharsets;
 import org.springframework.mock.web.MockHttpServletRequest;
